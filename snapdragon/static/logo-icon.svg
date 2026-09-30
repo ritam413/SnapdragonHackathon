@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Radial Glow -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#060911" />
+    </radialGradient>
+
+    <!-- NPU Hexagon Cyan/Blue Gradient -->
+    <linearGradient id="cyanBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="50%" stop-color="#0088FF" />
+      <stop offset="100%" stop-color="#0052D4" />
+    </linearGradient>
+
+    <!-- Crimson Snapdragon Fire Gradient -->
+    <linearGradient id="crimsonFireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3366" />
+      <stop offset="50%" stop-color="#E60012" />
+      <stop offset="100%" stop-color="#990000" />
+    </linearGradient>
+
+    <!-- Inner Facet Fill -->
+    <linearGradient id="facetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.95" />
+    </linearGradient>
+
+    <!-- Glow Filter for Neon Highlights -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded card -->
+  <rect width="512" height="512" rx="108" fill="url(#bgGlow)" stroke="#1E293B" stroke-width="2" />
+
+  <!-- Ambient NPU Aura -->
+  <circle cx="256" cy="256" r="160" fill="#00F0FF" opacity="0.08" filter="url(#neonGlow)" />
+  <circle cx="230" cy="240" r="100" fill="#FF3366" opacity="0.10" filter="url(#neonGlow)" />
+
+  <!-- Main Logomark Group -->
+  <g id="logomark" transform="translate(256, 256)">
+    <!-- Outer Hexagon Frame (45 TOPS NPU Architecture) -->
+    <!-- Hexagon points centered at (0,0): radius ~140 -->
+    <polygon points="0,-145 125,-72 125,72 0,145 -125,72 -125,-72"
+             fill="url(#facetGrad)"
+             stroke="url(#cyanBlueGrad)"
+             stroke-width="12"
+             stroke-linejoin="round" />
+
+    <!-- Inner Hexagon Ring -->
+    <polygon points="0,-115 99,-57 99,57 0,115 -99,57 -99,-57"
+             fill="none"
+             stroke="#334155"
+             stroke-width="3"
+             stroke-dasharray="6,6"
+             opacity="0.6" />
+
+    <!-- Neural Circuit Traces (Right Facet) -->
+    <g id="neuralCircuit" stroke="#00F0FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+      <!-- Trace 1 -->
+      <path d="M 28,-40 L 70,-40 L 95,-20" fill="none" />
+      <circle cx="95" cy="-20" r="5" fill="#00F0FF" />
+
+      <!-- Trace 2 -->
+      <path d="M 38,0 L 80,0 L 105,20" fill="none" />
+      <circle cx="105" cy="20" r="5" fill="#00F0FF" />
+
+      <!-- Trace 3 -->
+      <path d="M 20,45 L 60,45 L 85,70" fill="none" />
+      <circle cx="85" cy="70" r="5" fill="#00F0FF" />
+
+      <!-- Cross Connector -->
+      <path d="M 70,-40 L 70,-15" fill="none" />
+      <circle cx="70" cy="-15" r="3.5" fill="#00F0FF" />
+    </g>
+
+    <!-- Left Facet Sub-Traces -->
+    <g id="leftCircuit" stroke="#0088FF" stroke-width="3" stroke-linecap="round" opacity="0.45">
+      <path d="M -35,-50 L -80,-50 L -95,-35" fill="none" />
+      <circle cx="-95" cy="-35" r="4" fill="#0088FF" />
+      <path d="M -30,55 L -75,55 L -90,40" fill="none" />
+      <circle cx="-90" cy="40" r="4" fill="#0088FF" />
+    </g>
+
+    <!-- Speed/Edge Central Lightning Bolt (Snapdragon Power & Zero Latency) -->
+    <polygon points="8,-165 -65,-10 0,-10 -35,165 75,0 8,0"
+             fill="url(#crimsonFireGrad)"
+             stroke="#FF6B8B"
+             stroke-width="4"
+             stroke-linejoin="round"
+             filter="url(#neonGlow)" />
+  </g>
+</svg>

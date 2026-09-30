@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="100%" height="100%">
+  <defs>
+    <!-- NPU Hexagon Cyan/Blue Gradient (Deep for Light Mode) -->
+    <linearGradient id="cyanBlueGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="50%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+
+    <!-- Crimson Snapdragon Fire Gradient -->
+    <linearGradient id="crimsonFireGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E11D48" />
+      <stop offset="50%" stop-color="#DC2626" />
+      <stop offset="100%" stop-color="#991B1B" />
+    </linearGradient>
+
+    <!-- Inner Facet Fill for Light Mode -->
+    <linearGradient id="facetGradLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F1F5F9" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.95" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Icon Mark -->
+  <g id="mark" transform="translate(130, 120)">
+    <!-- Outer Hexagon Frame -->
+    <polygon points="0,-85 73,-42 73,42 0,85 -73,42 -73,-42"
+             fill="url(#facetGradLight)"
+             stroke="url(#cyanBlueGradLight)"
+             stroke-width="8"
+             stroke-linejoin="round" />
+
+    <!-- Inner Hexagon Ring -->
+    <polygon points="0,-68 58,-34 58,34 0,68 -58,34 -58,-34"
+             fill="none"
+             stroke="#CBD5E1"
+             stroke-width="2"
+             stroke-dasharray="4,4" />
+
+    <!-- Neural Circuit Traces -->
+    <g id="neuralCircuitLight" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 16,-24 L 42,-24 L 56,-12" fill="none" />
+      <circle cx="56" cy="-12" r="3.5" fill="#0284C7" />
+
+      <path d="M 22,0 L 48,0 L 62,12" fill="none" />
+      <circle cx="62" cy="12" r="3.5" fill="#0284C7" />
+
+      <path d="M 12,28 L 36,28 L 50,42" fill="none" />
+      <circle cx="50" cy="42" r="3.5" fill="#0284C7" />
+    </g>
+
+    <!-- Central Speed Bolt -->
+    <polygon points="5,-98 -40,-6 0,-6 -22,98 46,0 5,0"
+             fill="url(#crimsonFireGradLight)"
+             stroke="#BE123C"
+             stroke-width="2"
+             stroke-linejoin="round" />
+  </g>
+
+  <!-- Typography & Tagline Group -->
+  <g id="brandTypography" transform="translate(260, 120)">
+    <!-- Brand Title -->
+    <text x="0" y="10" font-family="'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="#0F172A" letter-spacing="-1">SnapEdge<tspan dx="14" fill="url(#crimsonFireGradLight)">AI</tspan></text>
+    
+    <!-- Subtitle / Architecture Badge -->
+    <text x="4" y="52" font-family="'Space Mono', 'Consolas', monospace" font-size="15" font-weight="700" fill="#0369A1" letter-spacing="3">45 TOPS HEXAGON NPU &bull; ON-DEVICE COPILOT</text>
+  </g>
+</svg>
