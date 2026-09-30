@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapEdge AI — On-Device Intelligence Engine for Snapdragon® HP PCs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navbar -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="brand-badge">
+                    <span class="dragon-icon">⚡</span>
+                    <span class="brand-title">SnapEdge <span class="brand-highlight">AI</span></span>
+                </div>
+                <div class="platform-chip">
+                    <span class="chip-dot"></span>
+                    <span>HP OmniBook Ultra &bull; Snapdragon® X Elite (45 TOPS NPU)</span>
+                </div>
+            </div>
+            
+            <div class="nav-metrics">
+                <div class="metric-pill">
+                    <span class="metric-label">Execution Provider</span>
+                    <span class="metric-val text-cyan" id="nav-provider">QNNExecutionProvider</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="metric-label">Power Multiplier</span>
+                    <span class="metric-val text-green" id="nav-power-mult">10.5x Efficient</span>
+                </div>
+                <div class="airgap-badge">
+                    <span class="lock-icon">🔒</span>
+                    <span>Air-Gapped &bull; 0 Cloud Egress</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Live Hardware Telemetry HUD -->
+        <section class="telemetry-hud">
+            <div class="hud-card main-npu">
+                <div class="hud-card-header">
+                    <span class="hud-tag">QUALCOMM HEXAGON™ NPU</span>
+                    <span class="live-pulse"></span>
+                </div>
+                <div class="hud-val-row">
+                    <div class="gauge-number" id="hud-tops">28.4</div>
+                    <div class="gauge-unit">TOPS <span class="sub-unit">/ 45 Peak</span></div>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="npu-bar" style="width: 63%;"></div>
+                </div>
+                <div class="hud-subtext">
+                    <span>NPU Load: <strong id="hud-util">63%</strong></span>
+                    <span>Temp: <strong id="hud-temp">38.5°C</strong></span>
+                </div>
+            </div>
+
+            <div class="hud-card eco-card">
+                <div class="hud-card-header">
+                    <span class="hud-tag">ECO-GOVERNOR (POWER DRAW)</span>
+                    <span class="badge-eco">90% Energy Saved</span>
+                </div>
+                <div class="power-comparison">
+                    <div class="power-col snapdragon">
+                        <span class="power-device">Snapdragon NPU</span>
+                        <div class="power-value" id="hud-npu-power">3.8 <span class="unit">W</span></div>
+                        <div class="power-bar-mini active" style="width: 15%;"></div>
+                    </div>
+                    <div class="power-vs">VS</div>
+                    <div class="power-col legacy-cpu">
+                        <span class="power-device">Legacy x86 CPU</span>
+                        <div class="power-value text-red" id="hud-cpu-power">42.5 <span class="unit">W</span></div>
+                        <div class="power-bar-mini cpu-bar" style="width: 90%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-card latency-card">
+                <div class="hud-card-header">
+                    <span class="hud-tag">LATENCY & THROUGHPUT</span>
+                    <span class="badge-fast">&lt; 15ms Target</span>
+                </div>
+                <div class="metrics-grid-mini">
+                    <div class="mini-metric">
+                        <span class="mini-label">Inference Latency</span>
+                        <span class="mini-value text-cyan" id="hud-latency">8.5 ms</span>
+                    </div>
+                    <div class="mini-metric">
+                        <span class="mini-label">Token Generation</span>
+                        <span class="mini-value text-green" id="hud-tps">42.8 t/s</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Cockpit & Navigation Tabs -->
+        <main class="cockpit-layout">
+            <nav class="agent-tabs">
+                <button class="tab-btn active" data-tab="workspace">
+                    <span class="tab-icon">📧</span>
+                    <div class="tab-meta">
+                        <span class="tab-name">Air-Gapped Workspace</span>
+                        <span class="tab-desc">Zero-Egress Triage & PII Masker</span>
+                    </div>
+                </button>
+                
+                <button class="tab-btn" data-tab="voice">
+                    <span class="tab-icon">🎙️</span>
+                    <div class="tab-meta">
+                        <span class="tab-name">Voice Meeting Scribe</span>
+                        <span class="tab-desc">Whisper-Base INT8 QNN</span>
+                    </div>
+                </button>
+
+                <button class="tab-btn" data-tab="rag">
+                    <span class="tab-icon">📄</span>
+                    <div class="tab-meta">
+                        <span class="tab-name">Neural Document RAG</span>
+                        <span class="tab-desc">All-MiniLM-L6 Vector Search</span>
+                    </div>
+                </button>
+
+                <button class="tab-btn" data-tab="vision">
+                    <span class="tab-icon">🛡️</span>
+                    <div class="tab-meta">
+                        <span class="tab-name">Vision Security Shield</span>
+                        <span class="tab-desc">YOLOv8-Nano Threat Scanner</span>
+                    </div>
+                </button>
+
+                <button class="tab-btn" data-tab="models">
+                    <span class="tab-icon">⚡</span>
+                    <div class="tab-meta">
+                        <span class="tab-name">Qualcomm AI Hub Models</span>
+                        <span class="tab-desc">Compiled NPU Binaries</span>
+                    </div>
+                </button>
+            </nav>
+
+            <!-- Tab Content Sections -->
+            <div class="tab-content-area">
+                
+                <!-- TAB 1: WORKSPACE & MAIL TRIAGE -->
+                <section class="tab-pane active" id="pane-workspace">
+                    <div class="pane-header">
+                        <div>
+                            <h2>Air-Gapped Workspace & Mail Intelligence (USP 2)</h2>
+                            <p>Processes incoming communications 100% locally on the Snapdragon Hexagon NPU. Strips PII and auto-extracts calendar actions with zero cloud leakage.</p>
+                        </div>
+                        <div class="preset-group">
+                            <span class="preset-label">Quick Scenarios:</span>
+                            <button class="btn-chip" onclick="loadWorkspacePreset('hackathon')">🏆 Hackathon Opp</button>
+                            <button class="btn-chip" onclick="loadWorkspacePreset('urgent')">🚨 Urgent Action</button>
+                            <button class="btn-chip" onclick="loadWorkspacePreset('pii')">🔒 PII & Secret Leak</button>
+                        </div>
+                    </div>
+
+                    <div class="workspace-grid">
+                        <div class="editor-col">
+                            <label class="form-label">Incoming Document / Email Content:</label>
+                            <textarea id="workspace-input" rows="8" class="text-area-custom" placeholder="Paste incoming email or text here..."></textarea>
+                            
+                            <div class="action-bar">
+                                <button class="btn-primary" id="btn-run-workspace" onclick="executeWorkspaceTriage()">
+                                    <span>⚡ Process on Snapdragon NPU</span>
+                                </button>
+                                <span class="sub-status" id="workspace-status">Ready</span>
+                            </div>
+                        </div>
+
+                        <div class="results-col">
+                            <div class="result-box">
+                                <div class="result-header">
+                                    <span class="result-title">Triage Analysis & Autonomous Actions</span>
+                                    <span class="badge-cat" id="res-category">Waiting</span>
+                                </div>
+
+                                <div class="result-body" id="workspace-results">
+                                    <div class="empty-state">Click 'Process on Snapdragon NPU' to run local inference.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2: VOICE SCRIBE -->
+                <section class="tab-pane" id="pane-voice">
+                    <div class="pane-header">
+                        <div>
+                            <h2>On-Device Voice Meeting Scribe (USP 1)</h2>
+                            <p>Transcribes speech, extracts key decisions, and assigns action items at 14ms latency using Qualcomm AI Hub Whisper-Base on Hexagon NPU.</p>
+                        </div>
+                        <div class="preset-group">
+                            <span class="preset-label">Audio Scenarios:</span>
+                            <button class="btn-chip" onclick="loadVoicePreset('product_sync')">🎙️ Product Sync</button>
+                            <button class="btn-chip" onclick="loadVoicePreset('security_review')">🛡️ Security Review</button>
+                            <button class="btn-chip" onclick="loadVoicePreset('board_briefing')">📈 Board Briefing</button>
+                        </div>
+                    </div>
+
+                    <div class="workspace-grid">
+                        <div class="editor-col">
+                            <label class="form-label">Simulated Audio Stream / Transcript Source:</label>
+                            <textarea id="voice-input" rows="8" class="text-area-custom" placeholder="Audio transcription stream..."></textarea>
+                            <div class="action-bar">
+                                <button class="btn-primary" id="btn-run-voice" onclick="executeVoiceTranscribe()">
+                                    <span>🎙️ Run Whisper INT8 QNN Transcriber</span>
+                                </button>
+                                <span class="sub-status" id="voice-status">Ready</span>
+                            </div>
+                        </div>
+
+                        <div class="results-col">
+                            <div class="result-box">
+                                <div class="result-header">
+                                    <span class="result-title">Meeting Decisions & Action Items</span>
+                                    <span class="badge-cat" id="voice-meta">Whisper QNN</span>
+                                </div>
+                                <div class="result-body" id="voice-results">
+                                    <div class="empty-state">Select an audio scenario and run the on-device transcriber.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: NEURAL RAG -->
+                <section class="tab-pane" id="pane-rag">
+                    <div class="pane-header">
+                        <div>
+                            <h2>On-Device Neural Document RAG (USP 1 & 2)</h2>
+                            <p>Sub-5ms dense vector search over confidential corporate documents using Qualcomm AI Hub All-MiniLM-L6 embeddings.</p>
+                        </div>
+                    </div>
+
+                    <div class="workspace-grid">
+                        <div class="editor-col">
+                            <label class="form-label">Natural Language Query:</label>
+                            <input type="text" id="rag-query" class="input-custom" value="What is the power efficiency and battery life of Snapdragon HP OmniBook?">
+                            
+                            <div class="quick-questions">
+                                <span class="preset-label">Suggested Queries:</span>
+                                <button class="btn-chip" onclick="setRAGQuery('How many TOPS does Qualcomm Hexagon NPU deliver?')">💡 Hexagon TOPS</button>
+                                <button class="btn-chip" onclick="setRAGQuery('How does SnapEdge maintain zero-cloud air-gap compliance?')">🔒 Air-Gap Compliance</button>
+                                <button class="btn-chip" onclick="setRAGQuery('What is the Qualcomm AI Hub optimization pipeline?')">⚡ AI Hub Pipeline</button>
+                            </div>
+
+                            <div class="action-bar">
+                                <button class="btn-primary" onclick="executeRAGQuery()">
+                                    <span>🔍 Vector Search on NPU</span>
+                                </button>
+                                <span class="sub-status" id="rag-status">Ready</span>
+                            </div>
+                        </div>
+
+                        <div class="results-col">
+                            <div class="result-box">
+                                <div class="result-header">
+                                    <span class="result-title">Synthesized Answer & Citations</span>
+                                    <span class="badge-cat text-cyan" id="rag-meta">Dense Vectors</span>
+                                </div>
+                                <div class="result-body" id="rag-results">
+                                    <div class="empty-state">Run a query to retrieve cited knowledge chunks on-device.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 4: VISION SECURITY SHIELD -->
+                <section class="tab-pane" id="pane-vision">
+                    <div class="pane-header">
+                        <div>
+                            <h2>Vision Security Shield & Phishing Inspector (USP 4)</h2>
+                            <p>Scans visual email attachments, suspicious invoices, and QR codes locally with Qualcomm AI Hub YOLOv8-Nano to isolate zero-day attacks.</p>
+                        </div>
+                        <div class="preset-group">
+                            <span class="preset-label">Visual Scenarios:</span>
+                            <button class="btn-chip" onclick="loadVisionPreset('phishing_email')">⚠️ Phishing Email</button>
+                            <button class="btn-chip" onclick="loadVisionPreset('sensitive_contract')">📑 Sensitive Contract</button>
+                            <button class="btn-chip" onclick="loadVisionPreset('qr_invoice')">🧾 Malicious QR</button>
+                            <button class="btn-chip" onclick="loadVisionPreset('clean_chart')">✅ Clean Benchmark</button>
+                        </div>
+                    </div>
+
+                    <div class="workspace-grid">
+                        <div class="editor-col">
+                            <label class="form-label">Attachment Inspection Target:</label>
+                            <div class="vision-target-card" id="vision-scenario-preview">
+                                <span class="preview-title" id="vis-target-title">Target: Phishing Email Overlay</span>
+                                <p class="preview-desc" id="vis-target-desc">Visual spoofing Qualcomm security credentials with deceptive button link.</p>
+                            </div>
+
+                            <div class="action-bar">
+                                <button class="btn-primary" onclick="executeVisionScan()">
+                                    <span>🛡️ Run YOLOv8-Nano Vision Shield</span>
+                                </button>
+                                <span class="sub-status" id="vision-status">Ready</span>
+                            </div>
+                        </div>
+
+                        <div class="results-col">
+                            <div class="result-box">
+                                <div class="result-header">
+                                    <span class="result-title">Security Threat Assessment</span>
+                                    <span class="badge-cat" id="vision-threat-badge">Safe</span>
+                                </div>
+                                <div class="result-body" id="vision-results">
+                                    <div class="empty-state">Select a scenario and run the vision shield.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 5: MODEL HUB REGISTRY -->
+                <section class="tab-pane" id="pane-models">
+                    <div class="pane-header">
+                        <div>
+                            <h2>Qualcomm AI Hub Model Architecture & Concurrency Matrix</h2>
+                            <p>All models are quantized, compiled, and pinned into the Snapdragon 45 TOPS Hexagon NPU execution graph.</p>
+                        </div>
+                    </div>
+
+                    <div class="models-grid" id="models-container">
+                        <!-- Loaded dynamically via JS -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

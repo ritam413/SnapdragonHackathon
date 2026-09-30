@@ -1,0 +1,39 @@
+name: Gmail to Telegram Opportunity Radar
+
+on:
+  schedule:
+    # 11:00 AM IST is 05:30 UTC
+    - cron: '30 5 * * *'
+    # 8:00 PM IST is 14:30 UTC
+    - cron: '30 14 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  run-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Prepare OAuth Token
+        run: |
+          echo "${{ secrets.GMAIL_TOKEN_JSON }}" > token.json
+
+      - name: Run Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GMAIL_TOKEN_PATH: token.json
+        run: |
+          python src/main.py
