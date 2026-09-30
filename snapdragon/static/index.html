@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnapEdge AI — On-Device Intelligence Engine for Snapdragon® HP PCs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Whyte Inktrap (Plus Jakarta Sans proxy), Whyte Inktrap Mono (Space Mono proxy), GrandSlang (Playfair Display proxy) -->
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,500;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body>
+<body class="selection:bg-signal-violet selection:text-white">
     <div class="app-container">
         <!-- Top Navbar -->
         <header class="navbar">
@@ -149,7 +150,7 @@
                 <section class="tab-pane active" id="pane-workspace">
                     <div class="pane-header">
                         <div>
-                            <h2>Air-Gapped Workspace & Mail Intelligence (USP 2)</h2>
+                            <h2>Air-Gapped Workspace & Mail Intelligence</h2>
                             <p>Processes incoming communications 100% locally on the Snapdragon Hexagon NPU. Strips PII and auto-extracts calendar actions with zero cloud leakage.</p>
                         </div>
                         <div class="preset-group">
@@ -192,7 +193,7 @@
                 <section class="tab-pane" id="pane-voice">
                     <div class="pane-header">
                         <div>
-                            <h2>On-Device Voice Meeting Scribe (USP 1)</h2>
+                            <h2>On-Device Voice Meeting Scribe</h2>
                             <p>Transcribes speech, extracts key decisions, and assigns action items at 14ms latency using Qualcomm AI Hub Whisper-Base on Hexagon NPU.</p>
                         </div>
                         <div class="preset-group">
@@ -233,7 +234,7 @@
                 <section class="tab-pane" id="pane-rag">
                     <div class="pane-header">
                         <div>
-                            <h2>On-Device Neural Document RAG (USP 1 & 2)</h2>
+                            <h2>On-Device Neural Document RAG</h2>
                             <p>Sub-5ms dense vector search over confidential corporate documents using Qualcomm AI Hub All-MiniLM-L6 embeddings.</p>
                         </div>
                     </div>
@@ -276,7 +277,7 @@
                 <section class="tab-pane" id="pane-vision">
                     <div class="pane-header">
                         <div>
-                            <h2>Vision Security Shield & Phishing Inspector (USP 4)</h2>
+                            <h2>Vision Security Shield & Phishing Inspector</h2>
                             <p>Scans visual email attachments, suspicious invoices, and QR codes locally with Qualcomm AI Hub YOLOv8-Nano to isolate zero-day attacks.</p>
                         </div>
                         <div class="preset-group">

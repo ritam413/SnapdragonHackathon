@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dope.security - The Fly-Direct SASE Architecture</title>
+  
+  <!-- Preconnect & Typeface Stacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Production typography: Plus Jakarta Sans (Whyte Inktrap), Space Mono (Whyte Mono), Playfair Display (GrandSlang), Karla -->
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,500;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'near-black': '#090909',
+            'almost-white': '#f7f9fa',
+            'soft-white': '#f0f0f0',
+            'steel': '#9ea0a3',
+            'graphite': '#525252',
+            'iron': '#423738',
+            'ash': '#787878',
+            'signal-violet': '#af50ff',
+            'lavender-mist': '#e1bdff',
+            'panel-translucent': 'rgba(51, 50, 72, 0.7)',
+          },
+          fontFamily: {
+            sans: ['"Whyte Inktrap"', '"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"Whyte Inktrap Mono"', '"Space Mono"', 'monospace'],
+            serif: ['"GrandSlang"', '"Playfair Display"', 'Georgia', 'serif'],
+            karla: ['Karla', 'sans-serif'],
+          },
+          borderRadius: {
+            'lg': '8px',
+            'lg-2': '10.8px',
+            '2xl': '19.2px',
+            'full': '99px',
+          },
+          letterSpacing: {
+            'stamped': '0.22em',
+            'stamped-wide': '0.25em',
+            'eyebrow': '0.20em',
+            'body-legible': '0.015em',
+            'tight-title': '-0.02em',
+            'btn-tracking': '0.08em',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --near-black: #090909;
+      --almost-white: #f7f9fa;
+      --soft-white: #f0f0f0;
+      --steel: #9ea0a3;
+      --graphite: #525252;
+      --iron: #423738;
+      --ash: #787878;
+      --signal-violet: #af50ff;
+      --lavender-mist: #e1bdff;
+      --ease-out-emil: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    body {
+      background-color: var(--near-black);
+      color: var(--almost-white);
+      font-family: 'Whyte Inktrap', 'Plus Jakarta Sans', system-ui, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: 0.015em;
+    }
+
+    /* Boarding Pass Letterhead Style */
+    .stamped-header {
+      font-family: 'Whyte Inktrap Mono', 'Space Mono', monospace;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* Editorial Italic Display Accent with Bolder Weight & Descender Clearance */
+    .editorial-italic {
+      font-family: 'GrandSlang', 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: 0.005em;
+    }
+
+    /* Subdued hairline borders */
+    .border-subtle {
+      border-color: rgba(247, 249, 250, 0.1);
+    }
+    .border-subtle-hover {
+      transition: border-color 200ms var(--ease-out-emil);
+    }
+    .border-subtle-hover:hover {
+      border-color: rgba(175, 80, 255, 0.45);
+    }
+
+    /* Restrained Violet Radial Glow */
+    .violet-glow-radial {
+      background: radial-gradient(circle at 50% 0%, rgba(175, 80, 255, 0.18) 0%, rgba(9, 9, 9, 0) 72%);
+    }
+
+    /* Glass Frosted Bar */
+    .glass-nav {
+      background: rgba(9, 9, 9, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(247, 249, 250, 0.08);
+    }
+
+    /* Emil's Responsive Tactile Button Physics (160ms ease-out) */
+    .btn-tactile {
+      transition: transform 160ms var(--ease-out-emil), background-color 160ms var(--ease-out-emil), border-color 160ms var(--ease-out-emil), color 160ms var(--ease-out-emil);
+    }
+    .btn-tactile:active {
+      transform: scale(0.97);
+    }
+
+    /* Hardware accelerated packet animation */
+    @keyframes pulsePacket {
+      0% { transform: translateY(0); opacity: 0.2; }
+      50% { opacity: 1; }
+      100% { transform: translateY(28px); opacity: 0.2; }
+    }
+    .packet-stream {
+      animation: pulsePacket 1.8s var(--ease-out-emil) infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="selection:bg-signal-violet selection:text-white antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- ==================== 1. FLOATING NAVIGATION ==================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
+    <div class="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+      <!-- Wordmark -->
+      <a href="#hero" class="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-signal-violet rounded">
+        <span class="text-xl font-bold tracking-tight text-almost-white">dope<span class="text-signal-violet">.</span>security</span>
+      </a>
+
+      <!-- Direct Nav Links -->
+      <nav class="hidden md:flex items-center gap-8 text-xs font-mono font-bold uppercase tracking-stamped text-steel">
+        <a href="#architecture" class="hover:text-almost-white transition-colors duration-150">Fly-Direct Architecture</a>
+        <a href="#inspection" class="hover:text-almost-white transition-colors duration-150">On-Device Engine</a>
+        <a href="#comparison" class="hover:text-almost-white transition-colors duration-150">Direct vs Proxy</a>
+      </nav>
+
+      <!-- Single Action Button -->
+      <div class="flex items-center gap-4">
+        <a href="#get-demo" class="btn-tactile inline-flex items-center justify-center px-4 py-2 text-xs font-bold uppercase tracking-btn-tracking text-almost-white bg-iron border border-subtle hover:border-signal-violet rounded-lg">
+          Book Direct Demo
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 2. ASYMMETRIC SPLIT HERO ==================== -->
+  <main class="flex-grow">
+    <section id="hero" class="relative min-h-[100dvh] pt-24 pb-16 flex flex-col justify-center violet-glow-radial border-b border-subtle">
+      <div class="max-w-[1400px] mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Content: Headline + Subtext + CTA -->
+        <div class="lg:col-span-7 flex flex-col justify-center space-y-7">
+          
+          <!-- Element 1: Eyebrow -->
+          <div class="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-eyebrow text-lavender-mist uppercase">
+            <span>Fly-Direct SASE Engine</span>
+          </div>
+
+          <!-- Element 2: Headline -->
+          <h1 class="text-4xl sm:text-5xl lg:text-[60px] font-bold tracking-tight-title text-almost-white leading-[1.12]">
+            Stop backhauling traffic. <br />
+            Inspect <span class="editorial-italic text-signal-violet pr-1 pb-1 inline-block">directly on the endpoint</span>.
+          </h1>
+
+          <!-- Element 3: Subtext -->
+          <p class="text-base font-normal tracking-body-legible text-steel leading-relaxed max-w-[54ch]">
+            Legacy proxies reroute your packets through remote data centers. dope.security performs full SSL and URL inspection locally on your devices with zero latency.
+          </p>
+
+          <!-- Element 4: Action CTAs -->
+          <div class="pt-2 flex flex-wrap items-center gap-4">
+            <a href="#get-demo" class="btn-tactile inline-flex items-center justify-center px-7 py-3.5 text-sm font-bold tracking-btn-tracking text-near-black bg-almost-white hover:bg-white rounded-lg shadow-sm">
+              Deploy in 15 Minutes
+            </a>
+            <a href="#inspection" class="btn-tactile inline-flex items-center justify-center px-7 py-3.5 text-sm font-bold tracking-btn-tracking text-almost-white bg-near-black border border-graphite hover:border-steel rounded-lg">
+              Explore Live Telemetry
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Visual: Interactive Live Telemetry Node -->
+        <div class="lg:col-span-5" id="architecture">
+          <div class="bg-[#0f0f10] border border-subtle rounded-2xl p-7 relative overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between border-b border-subtle pb-4 mb-5">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-signal-violet animate-pulse"></span>
+                <span class="text-xs font-mono font-bold uppercase tracking-eyebrow text-soft-white">Local Node: macOS ARM64</span>
+              </div>
+              <span class="text-xs font-mono font-bold tracking-wide text-lavender-mist" id="latencyDisplay">0.12ms Inspection</span>
+            </div>
+
+            <!-- Direct Route Topology Visualization -->
+            <div class="space-y-4 font-mono text-xs">
+              <div class="p-4 bg-near-black border border-subtle rounded-lg flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-iron flex items-center justify-center text-lavender-mist font-bold text-sm">EP</div>
+                  <div>
+                    <div class="text-almost-white font-bold tracking-wide">User Endpoint</div>
+                    <div class="text-[11px] text-ash font-medium tracking-normal">Direct socket binding</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-signal-violet font-bold tracking-wide">Decrypted</div>
+                  <div class="text-[10px] text-steel font-bold tracking-wider">TLS 1.3 Local</div>
+                </div>
+              </div>
+
+              <!-- Connecting Vector Pipe -->
+              <div class="relative flex items-center justify-center py-2 text-steel text-xs gap-2">
+                <div class="w-2 h-2 rounded-full bg-signal-violet packet-stream absolute"></div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                <span class="text-[11px] font-bold tracking-stamped uppercase text-ash pl-4">Direct Local Socket Flow</span>
+              </div>
+
+              <div class="p-4 bg-near-black border border-subtle rounded-lg flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-graphite flex items-center justify-center text-almost-white font-bold text-sm">WWW</div>
+                  <div>
+                    <div class="text-almost-white font-bold tracking-wide">Target Web Service</div>
+                    <div class="text-[11px] text-ash font-medium tracking-normal">api.github.com / okta.com</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-almost-white font-bold tracking-wide">Direct Path</div>
+                  <div class="text-[10px] text-steel font-bold tracking-wider">RTT: 4.8ms</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric summary grid -->
+            <div class="grid grid-cols-3 gap-2 mt-6 pt-5 border-t border-subtle text-center">
+              <div>
+                <div class="text-[10px] uppercase font-mono font-bold tracking-stamped text-steel">Stopovers</div>
+                <div class="text-lg font-bold text-almost-white mt-0.5">0</div>
+              </div>
+              <div>
+                <div class="text-[10px] uppercase font-mono font-bold tracking-stamped text-steel">Latency Added</div>
+                <div class="text-lg font-bold text-signal-violet mt-0.5">0 ms</div>
+              </div>
+              <div>
+                <div class="text-[10px] uppercase font-mono font-bold tracking-stamped text-steel">Packet Privacy</div>
+                <div class="text-lg font-bold text-soft-white mt-0.5">100%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== 3. SOCIAL PROOF LOGO WALL ==================== -->
+    <section class="py-14 border-b border-subtle bg-near-black">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <div class="text-center mb-9">
+          <p class="text-xs font-mono font-bold uppercase tracking-stamped-wide text-steel">Trusted across mission-critical enterprise fleets</p>
+        </div>
+        
+        <!-- Clean Monochrome SVG Marks -->
+        <div class="flex flex-wrap items-center justify-center gap-10 md:gap-16 opacity-80">
+          <svg class="h-6 w-auto fill-current text-steel hover:text-almost-white transition-colors duration-200" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <svg class="h-6 w-auto fill-current text-steel hover:text-almost-white transition-colors duration-200" viewBox="0 0 24 24"><path d="M12.186 24c-1.895 0-3.73-.55-5.312-1.594l1.378-2.096c1.19.784 2.57 1.198 3.934 1.198 4.14 0 7.509-3.368 7.509-7.508 0-4.14-3.369-7.508-7.509-7.508-4.14 0-7.508 3.368-7.508 7.508 0 1.488.44 2.913 1.272 4.125L3.87 19.508C2.656 17.79 2 15.728 2 13.992 2 8.483 6.483 4 12.186 4 17.89 4 22.373 8.483 22.373 13.992 22.373 19.5 17.89 24 12.186 24z"/></svg>
+          <svg class="h-6 w-auto fill-current text-steel hover:text-almost-white transition-colors duration-200" viewBox="0 0 24 24"><path d="M13.545 2.907c-.45-.487-1.125-.794-1.875-.794-.75 0-1.425.307-1.875.794L.545 13.047c-.727.787-.727 2.062 0 2.85l9.25 10c.45.487 1.125.794 1.875.794.75 0 1.425-.307 1.875-.794l9.25-10c.727-.787.727-2.062 0-2.85l-9.25-10.14z"/></svg>
+          <svg class="h-6 w-auto fill-current text-steel hover:text-almost-white transition-colors duration-200" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 4. ASYMMETRIC BENTO GRID ==================== -->
+    <section id="inspection" class="py-24 border-b border-subtle bg-near-black">
+      <div class="max-w-[1400px] mx-auto px-6">
+        
+        <!-- Section Header -->
+        <div class="max-w-2xl mb-16">
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-almost-white">
+            Architecture engineered for <span class="editorial-italic text-lavender-mist font-semibold">instantaneous inspection</span>.
+          </h2>
+          <p class="text-sm font-normal tracking-body-legible text-steel mt-3.5 leading-relaxed">
+            Eliminate proxy hops. SSL decryption, URL categorization, and AI DLP execute natively on the hardware.
+          </p>
+        </div>
+
+        <!-- Bento Grid with Visual Diversity -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          
+          <!-- Cell 1: Large Span (7 cols) with Violet Bloom Highlight -->
+          <div class="md:col-span-7 bg-[#0c0c0e] border border-subtle hover:border-signal-violet/40 transition-colors duration-200 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between min-h-[380px]">
+            <div class="absolute -right-16 -top-16 w-64 h-64 bg-signal-violet/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div>
+              <div class="text-xs font-mono font-bold uppercase tracking-stamped text-lavender-mist mb-3">01. SSL Decryption</div>
+              <h3 class="text-2xl font-bold tracking-tight text-almost-white">Zero Certificate Re-signing</h3>
+              <p class="text-sm font-normal tracking-body-legible text-steel mt-3 max-w-[46ch] leading-relaxed">
+                Traditional cloud proxies act as a man-in-the-middle, breaking TLS handshakes. dope.security checks URL classifications before network dispatch, keeping your master certificates private.
+              </p>
+            </div>
+            <div class="mt-8 pt-4 border-t border-subtle flex items-center justify-between font-mono text-xs">
+              <span class="text-steel font-bold tracking-wide">Memory footprint: 18 MB</span>
+              <span class="text-signal-violet font-bold tracking-wide">Local Process: dope-agent</span>
+            </div>
+          </div>
+
+          <!-- Cell 2: 5 cols with Iron Wash Finish -->
+          <div class="md:col-span-5 bg-iron/40 border border-subtle hover:border-steel transition-colors duration-200 rounded-2xl p-8 flex flex-col justify-between min-h-[380px]">
+            <div>
+              <div class="text-xs font-mono font-bold uppercase tracking-stamped text-steel mb-3">02. AI DLP Engine</div>
+              <h3 class="text-2xl font-bold tracking-tight text-almost-white">On-Device Content Tokenizer</h3>
+              <p class="text-sm font-normal tracking-body-legible text-steel mt-3 leading-relaxed">
+                Scan uploads and clipboard transfers for confidential keys, source code, and customer data locally before packets leave the machine.
+              </p>
+            </div>
+            <div class="mt-8 p-4 bg-near-black border border-subtle rounded-lg font-mono text-xs text-almost-white">
+              <div class="flex justify-between text-steel font-bold text-[11px] mb-1.5">
+                <span class="tracking-wide">Pattern Matcher</span>
+                <span class="text-soft-white tracking-wide">RegEx + Embedding</span>
+              </div>
+              <div class="text-signal-violet font-bold tracking-wide">PASSED : No Secrets Detected</div>
+            </div>
+          </div>
+
+          <!-- Cell 3: Full Width (12 cols) Boarding Pass Section -->
+          <div class="md:col-span-12 bg-[#0a0a0b] border border-subtle rounded-2xl p-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            <div class="space-y-2">
+              <div class="text-xs font-mono font-bold uppercase tracking-stamped text-steel">03. High Availability</div>
+              <h3 class="text-xl font-bold tracking-tight text-almost-white">Immune to Cloud Outages</h3>
+              <p class="text-xs font-normal tracking-body-legible text-steel leading-relaxed">
+                When a remote proxy vendor has a regional outage, company browsing halts. dope.security keeps browsing direct.
+              </p>
+            </div>
+            <div class="space-y-2 md:border-l border-subtle md:pl-8">
+              <div class="text-xs font-mono font-bold uppercase tracking-stamped text-steel">Policy Engine</div>
+              <h3 class="text-xl font-bold tracking-tight text-almost-white">Sub-Millisecond Enforcement</h3>
+              <p class="text-xs font-normal tracking-body-legible text-steel leading-relaxed">
+                Policies synchronize instantaneously over encrypted WebSockets and cache directly on the client.
+              </p>
+            </div>
+            <div class="space-y-2 md:border-l border-subtle md:pl-8">
+              <div class="text-xs font-mono font-bold uppercase tracking-stamped text-steel">Bandwidth Efficiency</div>
+              <h3 class="text-xl font-bold tracking-tight text-almost-white">Zero Backhaul Tax</h3>
+              <p class="text-xs font-normal tracking-body-legible text-steel leading-relaxed">
+                Save 100% of the network transit egress costs incurred by routing enterprise video calls through cloud security hops.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== 5. TECHNICAL ARCHITECTURE COMPARISON ==================== -->
+    <section id="comparison" class="py-24 border-b border-subtle bg-near-black">
+      <div class="max-w-[1400px] mx-auto px-6">
+        
+        <div class="max-w-xl mb-16">
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-almost-white">
+            Direct path versus <span class="editorial-italic text-signal-violet font-semibold">legacy proxy hop</span>.
+          </h2>
+          <p class="text-sm font-normal tracking-body-legible text-steel mt-3">
+            Why routing enterprise traffic through legacy cloud data centers is fundamentally broken.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Legacy Architecture Card -->
+          <div class="p-8 rounded-2xl bg-near-black border border-graphite/50 space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-subtle">
+              <h3 class="text-lg font-bold tracking-tight text-steel">Legacy Cloud Proxy</h3>
+              <span class="text-xs font-mono font-bold uppercase tracking-stamped text-iron px-2.5 py-1 bg-near-black rounded border border-graphite">High Latency</span>
+            </div>
+            <ul class="space-y-4 text-sm tracking-body-legible text-steel">
+              <li class="flex items-start gap-3">
+                <span class="text-ash font-mono font-bold">1.</span>
+                <span>User packets rerouted 500+ miles to vendor data center.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-ash font-mono font-bold">2.</span>
+                <span>Third-party proxy decrypts and stores your TLS session keys.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-ash font-mono font-bold">3.</span>
+                <span>Vendor outage brings down internet connectivity for entire company.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- dope.security Fly-Direct Card -->
+          <div class="p-8 rounded-2xl bg-[#0e0e11] border border-signal-violet/40 space-y-6 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-signal-violet/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between pb-4 border-b border-subtle">
+              <h3 class="text-lg font-bold tracking-tight text-almost-white">dope.security Fly-Direct</h3>
+              <span class="text-xs font-mono font-bold uppercase tracking-stamped text-lavender-mist px-2.5 py-1 bg-signal-violet/20 rounded border border-signal-violet/30">Zero Latency</span>
+            </div>
+            <ul class="space-y-4 text-sm tracking-body-legible text-soft-white font-medium">
+              <li class="flex items-start gap-3">
+                <span class="text-signal-violet font-mono font-bold">1.</span>
+                <span>Traffic routes straight to destination without third-party transit.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-signal-violet font-mono font-bold">2.</span>
+                <span>Full URL, CASB, and DLP classification processed in local RAM.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-signal-violet font-mono font-bold">3.</span>
+                <span>Zero single points of failure. Works offline or online seamlessly.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== 6. CONVERSION SECTION ==================== -->
+    <section id="get-demo" class="py-28 bg-near-black relative overflow-hidden">
+      <div class="max-w-[1400px] mx-auto px-6 text-center relative z-10">
+        
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-almost-white tracking-tight leading-tight max-w-3xl mx-auto">
+          Experience SASE with <br />
+          <span class="editorial-italic text-signal-violet font-semibold">zero latency stopovers</span>.
+        </h2>
+
+        <p class="text-sm sm:text-base font-normal tracking-body-legible text-steel max-w-[50ch] mx-auto mt-6 leading-relaxed">
+          Roll out Fly-Direct inspection to your company in minutes. Native installers for macOS, Windows, iOS, and Linux.
+        </p>
+
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <button class="btn-tactile px-8 py-4 text-sm font-bold tracking-btn-tracking text-near-black bg-almost-white hover:bg-white rounded-lg shadow-lg">
+            Deploy in 15 Minutes
+          </button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 7. FOOTER ==================== -->
+  <footer class="border-t border-subtle bg-[#070707] py-12">
+    <div class="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <!-- Brand & Copyright -->
+      <div class="flex items-center gap-3">
+        <span class="text-base font-bold text-almost-white">dope<span class="text-signal-violet">.</span>security</span>
+        <span class="text-xs font-medium text-ash">Fly-Direct SASE Inc.</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex flex-wrap items-center gap-8 text-xs font-mono font-bold uppercase tracking-stamped text-steel">
+        <a href="#hero" class="hover:text-almost-white transition-colors duration-150">Overview</a>
+        <a href="#inspection" class="hover:text-almost-white transition-colors duration-150">Platform</a>
+        <a href="#comparison" class="hover:text-almost-white transition-colors duration-150">Architecture</a>
+        <a href="#get-demo" class="hover:text-almost-white transition-colors duration-150">Documentation</a>
+      </div>
+
+      <!-- Compliance status -->
+      <div class="text-xs font-mono font-bold tracking-wider text-ash">
+        SOC2 Type II Certified
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>
